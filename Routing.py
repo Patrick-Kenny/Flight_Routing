@@ -19,8 +19,8 @@ def Add_Route(rMap, args):
         Error(["ADD"] + args)
         return
 
-    origin = str(args[0])
-    destination = str(args[1])
+    origin = str(args[0]).strip()
+    destination = str(args[1]).strip()
     try:    # Ensures that distance and duration are numbers
         distance = float(args[2])
         duration = float(args[3])
@@ -30,11 +30,11 @@ def Add_Route(rMap, args):
         return
 
     # Add origin node if doesn't exist
-    if not Check_Location(origin):
+    if not rMap.has_node(origin):
         rMap.add_node(origin)
 
     # Add destination node if doesn't exist
-    if not Check_Location(destination):
+    if not rMap.has_node(destination):
         rMap.add_node(destination)
 
     # Update route if it exists, otherwise create route
@@ -60,8 +60,8 @@ def Query_Route(rMap, args):
         Error(["QUERY"] + args)
         return
 
-    origin = str(args[0])
-    destination = str(args[1])
+    origin = str(args[0]).strip()
+    destination = str(args[1]).strip()
 
     # Check Locations as valid, reachable nodes
     if not Check_Route(rMap, origin, destination):
@@ -83,14 +83,14 @@ def Query_Route(rMap, args):
 # Describes command as malformed if issue is detected
 
 def Error(line):
-    print("MALFORMED " + ','.join(line), file = sys.stderr)
+    print("MALFORMED " + ','.join(line).strip(), file = sys.stderr)
 
 
 # Checks to ensure that both origin and destination are in the graph
 # and that the destination is reachable from the origin
 
 def Check_Route(rMap, o, d):
-    return o in rMap and d in rMap and d in nx.descendants(rMap, origin)
+    return o in rMap and d in rMap and d in nx.descendants(rMap, o)
 
 
 # Calculates the cost of a given path
